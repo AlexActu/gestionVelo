@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>Responsive pour Pierre</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		div {
+			background-color: red;
+			float: left;
+			height: 100px;
+			margin: 2% 1% 0;
+			width: 23%;
+		}
+
+		@media screen and (max-width:1080px) {
+			div {
+				background-color:green;
+				float: none;
+				margin-left: 0;
+				margin-right: 0;
+				width: 100%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+       <script>
+			$.getJSON('/gestionVelo/php/ControleurGestion.php',{"fonction":"getReservation",
+						   "idTour":2
+						},function(data){
+							console.log(data.donneesClient['0'].nom);
+
+							$.each(data, function(i, item) {
+								if(!item.dateDepart==undefined){
+									$('<div></div>').html('Tour du ' + item.dateDepart + ' à ' + item.dateArrivee + '<br />' + 'Durée ' + item.duree + '<br />' + 'Nombre ' + item.nbReservation).appendTo($('body'));
+								} else {
+									$('<div></div>').html('Tonu ' + item.nom + ' à ' + item.prenom + '<br />' + 'Durée ' + item.accessoire).appendTo($('body'));
+								}
+							});
+			});
+		</script>
+</body>
+</html>

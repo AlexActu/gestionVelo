@@ -8,20 +8,20 @@ $(document).ready(function(){
 	if(velo.size() > 0 && velo.is(':visible')) {
 		listerVelo();
 		$('#creerVeloDate').datepicker();
-		$( "#modifierVeloRevisionDe" ).datepicker({
+		$( "#modifierVeloRevisionDe" ).datetimepicker({
 			defaultDate: "+1w",
 		        changeMonth: true,
 		        numberOfMonths: 1,
 		        onClose: function( selectedDate ) {
-				$( "#modifierVeloRevisionA" ).datepicker( "option", "minDate", selectedDate );
+				$( "#modifierVeloRevisionA" ).datetimepicker( "option", "minDate", selectedDate );
 			}
 		});
-		$( "#modifierVeloRevisionA" ).datepicker({
+		$( "#modifierVeloRevisionA" ).datetimepicker({
 			defaultDate: "+1w",
 			changeMonth: true,
 			numberOfMonths: 1,
 			onClose: function( selectedDate ) {
-				$( "#modifierVeloRevisionDe" ).datepicker( "option", "maxDate", selectedDate );
+				$( "#modifierVeloRevisionDe" ).datetimepicker( "option", "maxDate", selectedDate );
 			}
 		});
 		listerAccessoireVelo();
@@ -41,7 +41,7 @@ $(document).ready(function(){
 
 $( "#supprimerVelo" ).click(function() {
 	var id = $("#veloAsupprimer").val();
- 	 $.getJSON('/velo/php/ControleurVelo.php',{"fonction":"supprimer","id":id}, function(data){
+ 	 $.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"supprimer","id":id}, function(data){
 	});
 	listerVelo();
 });
@@ -52,7 +52,7 @@ $( "#ajouterVelo" ).click(function() {
 	var model = $("#creerVeloModel").val();
 	var desc = $("#creerVeloDescription").val();
 	var date = $("#creerVeloDate").val();
- 	 $.getJSON('/velo/php/ControleurVelo.php',{"fonction":"creer","type":type,"model":model,"desc":desc,"date":date}, function(data){
+ 	 $.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"creer","type":type,"model":model,"desc":desc,"date":date}, function(data){
 	});
 	listerAccessoire();
 	$("#creerVeloType").val("");
@@ -64,7 +64,7 @@ $( "#ajouterVelo" ).click(function() {
 
 $( "#chargerVeloAmodifier" ).click(function() {
     var id = $("#veloAmodifier").val();
-    $.getJSON('/velo/php/ControleurVelo.php',{"fonction":"lire","id":id}, function(data)
+    $.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"lire","id":id}, function(data)
     {
 	$("#modifierVeloType").val(data.type);
 	$("#modifierVeloModel").val(data.model);
@@ -87,7 +87,7 @@ $('#modifierVelo').click(function(){
 	var revisionD = $("#modifierVeloRevisionDe").val();
 	var revisionF = $("#modifierVeloRevisionA").val();
 
-	$.getJSON('/velo/php/ControleurVelo.php',{"fonction":"modifier",
+	$.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"modifier",
 						  "type":type,
 						  "model":model,
 						  "date":date,
@@ -111,7 +111,7 @@ $('#modifierVelo').click(function(){
 
 
 function listerVelo(){
-	$.getJSON('/velo/php/ControleurVelo.php',{"fonction":"lireTous"}, function(data){
+	$.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"lireTous"}, function(data){
 		$('#veloAsupprimer').empty();
 		$('#veloAmodifier').empty();
 		$.each(data, function(i, item) {
@@ -124,7 +124,7 @@ function listerVelo(){
 
 
 function listerAccessoireVelo(){
-	$.getJSON('/velo/php/ControleurAccessoire.php',{fonction:"lireTous"}, function(data){
+	$.getJSON('/gestionVelo/php/ControleurAccessoire.php',{fonction:"lireTous"}, function(data){
 		$.each(data, function(i, item) {
 			$('<th data-accessoire-id='+item.id+'></th>')
 			.text(item.nom)
@@ -132,7 +132,7 @@ function listerAccessoireVelo(){
 		});
 		var indice = $('#accessoire_list').find('th').length-1,
                     htmlVelo = '';
-		$.getJSON('/velo/php/ControleurVelo.php',{fonction:"lireTous"}, function(data){
+		$.getJSON('/gestionVelo/php/ControleurVelo.php',{fonction:"lireTous"}, function(data){
 			$.each(data, function(i, item) {
                                 htmlVelo += '<tr><td data-velo-id='+item.id+'>'+item.type + '<br />' + item.model +'</td>';
 				var i;
@@ -154,7 +154,7 @@ $( "#modifierRelationVeloAccessoire" ).click(function validerTableau(){
                 var idaccessoire = $(this).attr('data-accessoire');
 		//console.log(idvelo+' '+idaccessoire);
                 if($("[data-velo="+idvelo+"][data-accessoire="+idaccessoire+"]").prop('checked')){
-                $.getJSON('/velo/php/ControleurVelo_Accessoire.php',
+                $.getJSON('/gestionVelo/php/ControleurVelo_Accessoire.php',
                         {
                                 fonction:"ajouter",
                                 idVelo:idvelo,
@@ -162,7 +162,7 @@ $( "#modifierRelationVeloAccessoire" ).click(function validerTableau(){
                         }, function(data){});
 		//console.log(idvelo+' '+idaccessoire);
                 }else{
-                        $.getJSON('/velo/php/ControleurVelo_Accessoire.php',
+                        $.getJSON('/gestionVelo/php/ControleurVelo_Accessoire.php',
                         {
                                 fonction:"supprimer",
                                 idVelo:idvelo,
@@ -178,7 +178,7 @@ function remplireTableau(){
 	$('#accessoire_list').parentsUntil('table').next().find(':checkbox').each(function(){
 		var idvelo = $(this).attr('data-velo');
 		var idaccessoire = $(this).attr('data-accessoire');
-		$.getJSON('/velo/php/ControleurVelo_Accessoire.php',
+		$.getJSON('/gestionVelo/php/ControleurVelo_Accessoire.php',
 		{fonction:"estValidee",
 		 idVelo:idvelo,
 	 	 idAccessoire:idaccessoire}, 
@@ -196,7 +196,7 @@ function remplireTableau(){
 $( "#ajouterAccessoire" ).click(function() {
 	var nom = $("#accessoireNom").val();
 	var desc = $("#accessoireDesc").val();
- 	 $.getJSON('/velo/php/ControleurAccessoire.php',{"fonction":"creer","nom":nom,"desc":desc}, function(data){
+ 	 $.getJSON('/gestionVelo/php/ControleurAccessoire.php',{"fonction":"creer","nom":nom,"desc":desc}, function(data){
 	});
 	listerAccessoire();
 	$("#accessoireNom").val("");
@@ -205,14 +205,14 @@ $( "#ajouterAccessoire" ).click(function() {
 
 $( "#supprimerAccessoire" ).click(function() {
 	var id = $("#delete-pieces").val();
- 	 $.getJSON('/velo/php/ControleurAccessoire.php',{"fonction":"supprimer","id":id}, function(data){
+ 	 $.getJSON('/gestionVelo/php/ControleurAccessoire.php',{"fonction":"supprimer","id":id}, function(data){
 	});
 	listerAccessoire();
 });
 
 $( "#chargerAccessoire" ).click(function() {
     var id = $("#modify-pieces").val();
-    $.getJSON('/velo/php/ControleurAccessoire.php',{"fonction":"lire","id":id}, function(data)
+    $.getJSON('/gestionVelo/php/ControleurAccessoire.php',{"fonction":"lire","id":id}, function(data)
 	{
 	    $("#champsModifier").removeClass("hidden");
 	    $("#accessoireNomModifier").val(data.nom);
@@ -225,7 +225,7 @@ $( "#modifierAccessoire" ).click(function() {
     var id = $("#modify-pieces").val();
     var nom = $("#accessoireNomModifier").val();
     var desc = $("#accessoireDescModifier").val();
-	$.getJSON('/velo/php/ControleurAccessoire.php',{"fonction":"modifier","nom":nom,"desc":desc,"id":id}, function(data){});
+	$.getJSON('/gestionVelo/php/ControleurAccessoire.php',{"fonction":"modifier","nom":nom,"desc":desc,"id":id}, function(data){});
 	listerAccessoire();  	
 	$("#champsModifier").addClass("hidden");
  	
@@ -233,7 +233,7 @@ $( "#modifierAccessoire" ).click(function() {
 
 
 function listerAccessoire(){
-	$.getJSON('/velo/php/ControleurAccessoire.php',{fonction:"lireTous"}, function(data){
+	$.getJSON('/gestionVelo/php/ControleurAccessoire.php',{fonction:"lireTous"}, function(data){
 		$('#delete-pieces').empty();
 		$('#modify-pieces').empty();
 		$.each(data, function(i, item) {
@@ -247,7 +247,22 @@ function listerAccessoire(){
 
 /**   Tour   **/
 
-
+$( "#tourDateDepart" ).datetimepicker({
+	defaultDate: "+1w",
+    changeMonth: true,
+    numberOfMonths: 1,
+    onClose: function( selectedDate ) {
+		$( "#tourDateArrivee" ).datetimepicker( "option", "minDate", selectedDate );
+	}
+});
+$( "#tourDateArrivee" ).datetimepicker({
+	defaultDate: "+1w",
+	changeMonth: true,
+	numberOfMonths: 1,
+	onClose: function( selectedDate ) {
+		$( "#tourDateDepart" ).datetimepicker( "option", "maxDate", selectedDate );
+	}
+});
 
 $( "#ajouterTour" ).click(function() {
 	var dateDepart = $("#tourDateDepart").val();
@@ -257,7 +272,7 @@ $( "#ajouterTour" ).click(function() {
 	var parcours = $("#tourParcours").val();
 	console.log(parcours);
 	var maxx = $("#tourMax").val();
- 	 $.getJSON('/velo/php/ControleurTour.php',{"fonction":"creer",
+ 	 $.getJSON('/gestionVelo/php/ControleurTour.php',{"fonction":"creer",
 						   "dateDepart":dateDepart,
 						   "dateArrivee":dateArrivee,
 						   "prix":prix,
@@ -276,7 +291,7 @@ $( "#ajouterTour" ).click(function() {
 /*
 $( "#supprimerVelo" ).click(function() {
 	var id = $("#veloAsupprimer").val();
- 	 $.getJSON('/velo/php/ControleurVelo.php',{"fonction":"supprimer","id":id}, function(data){
+ 	 $.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"supprimer","id":id}, function(data){
 	});
 	listerVelo();
 });
@@ -284,7 +299,7 @@ $( "#supprimerVelo" ).click(function() {
 
 $( "#chargerVeloAmodifier" ).click(function() {
     var id = $("#veloAmodifier").val();
-    $.getJSON('/velo/php/ControleurVelo.php',{"fonction":"lire","id":id}, function(data)
+    $.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"lire","id":id}, function(data)
     {
 	$("#modifierVeloType").val(data.type);
 	$("#modifierVeloModel").val(data.model);
@@ -307,7 +322,7 @@ $('#modifierVelo').click(function(){
 	var revisionD = $("#modifierVeloRevisionDe").val();
 	var revisionF = $("#modifierVeloRevisionA").val();
 
-	$.getJSON('/velo/php/ControleurVelo.php',{"fonction":"modifier",
+	$.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"modifier",
 						  "type":type,
 						  "model":model,
 						  "date":date,
@@ -331,7 +346,7 @@ $('#modifierVelo').click(function(){
 
 
 function listerVelo(){
-	$.getJSON('/velo/php/ControleurVelo.php',{"fonction":"lireTous"}, function(data){
+	$.getJSON('/gestionVelo/php/ControleurVelo.php',{"fonction":"lireTous"}, function(data){
 		$('#veloAsupprimer').empty();
 		$('#veloAmodifier').empty();
 		$.each(data, function(i, item) {
@@ -344,7 +359,7 @@ function listerVelo(){
 
 
 function listerAccessoireVelo(){
-	$.getJSON('/velo/php/ControleurAccessoire.php',{fonction:"lireTous"}, function(data){
+	$.getJSON('/gestionVelo/php/ControleurAccessoire.php',{fonction:"lireTous"}, function(data){
 		$.each(data, function(i, item) {
 			$('<th data-accessoire-id='+item.id+'></th>')
 			.text(item.nom)
@@ -352,7 +367,7 @@ function listerAccessoireVelo(){
 		});
 		var indice = $('#accessoire_list').find('th').length-1,
                     htmlVelo = '';
-		$.getJSON('/velo/php/ControleurVelo.php',{fonction:"lireTous"}, function(data){
+		$.getJSON('/gestionVelo/php/ControleurVelo.php',{fonction:"lireTous"}, function(data){
 			$.each(data, function(i, item) {
                                 htmlVelo += '<tr><td data-velo-id='+item.id+'>'+item.type + '<br />' + item.model +'</td>';
 				var i;
@@ -373,7 +388,7 @@ function remplireTableau(){
 	$('#accessoire_list').parentsUntil('table').next().find(':checkbox').each(function(){
 		var idvelo = $(this).attr('data-velo');
 		var idaccessoire = $(this).attr('data-accessoire');
-		$.getJSON('/velo/php/ControleurVelo_Accessoire.php',
+		$.getJSON('/gestionVelo/php/ControleurVelo_Accessoire.php',
 		{fonction:"estValidee",
 		 idVelo:idvelo,
 	 	 idAccessoire:idaccessoire}, 

@@ -181,7 +181,7 @@ WHERE gv_Tour.id =' .$idTour;
       
 		}	
 		
-		print json_encode(array($donneesTour,$donneesClient));   
+		print json_encode(array("donneesTour"=>$donneesTour,"donneesClient"=>$donneesClient));   
 	}	
 
 	
